@@ -24,7 +24,6 @@ activity = st.sidebar.selectbox("Activity Level", [
 goal = st.sidebar.selectbox("Goal", ["Maintain weight", "Lose weight", "Gain muscle"])
 diet = st.sidebar.selectbox("Diet Preference", ["Balanced", "Vegetarian", "High-protein", "Keto"])
 
-
 # BMI Calculator
 def calculate_bmi(weight, height_cm):
     return weight / ((height_cm / 100) ** 2)
@@ -32,79 +31,93 @@ def calculate_bmi(weight, height_cm):
 bmi = calculate_bmi(weight, height)
 st.metric("BMI", f"{bmi:.1f}")
 
-# Classification
-if bmi < 18.5:
-    body_type = "Underweight"
-elif bmi < 25:
-    body_type = "Healthy"
-elif bmi < 30:
-    body_type = "Overweight"
-else:
-    body_type = "Obese"
-
-st.write(f"📌 **Body Type:** {body_type}")
-st.write(f"🎯 **Goal Selected:** {goal}")
+# Display goal-based message
+st.write(f"🎯 Goal: **{goal}**")
+st.write(f"👤 Hello **{name}**, your daily calorie intake will be adjusted based on your goal.\n")
 
 
-# Meal Plan Personalized by Body Type + Goal
+# Personalized MEAL PLAN
 meal_plans = {
-    "Lose weight": {
-        "Underweight": ["Oats + Milk", "Boiled Eggs + Fruit", "Paneer Salad", "Veg Soup", "Tofu Stir Fry", "Brown Rice + Dal", "Salad + Nuts"],
-        "Healthy": ["Oats + Banana", "Chicken + Salad", "Brown Rice + Veg", "Milk + Nuts", "Paneer + Roti", "Fish + Salad", "Soup + Veggies"],
-        "Overweight": ["Veg Soup + Apple", "Salad + Sprouts", "Low-carb Roti + Veg", "Smoothie + Seeds", "Tofu Wrap", "Fish + Greens", "Detox Day"],
-        "Obese": ["Detox Smoothie", "Veg Soup", "Salad", "Boiled Veg", "Low-carb Roti", "Fruits only", "Soup only"]
-    },
-    "Maintain weight": {
-        "Healthy": ["Oats + Eggs", "Chicken + Rice", "Dal + Roti", "Paneer + Rice", "Fish + Veg", "Egg Rice", "Balanced Meal"],
-        "default": ["Oats", "Dal", "Veg", "Rice", "Chicken", "Roti", "Fruits"]
-    },
-    "Gain muscle": {
-        "Underweight": ["Egg Omelette", "Chicken + Oats", "Peanut Butter Sandwich", "Paneer Rice", "Banana Shake", "Fish Meal", "High Protein Wrap"],
-        "Healthy": ["Protein Shake", "Chicken + Rice", "Paneer + Roti", "Eggs + Rice", "Fish + Veg", "High Protein Dal", "Milk + Nuts"],
-        "default": ["Protein Shake", "Paneer", "Eggs", "Fish", "Milk", "Banana", "Healthy Meals"]
-    }
+    "Lose weight": [
+        "Oats + Fruit",
+        "Salad + Soup",
+        "Veg Sandwich",
+        "Brown Rice + Veggies",
+        "Lean Chicken + Salad",
+        "Paneer + Roti",
+        "Detox Day: Fruit/Nuts"
+    ],
+    "Gain muscle": [
+        "Eggs + Oats",
+        "Chicken + Rice",
+        "Paneer + Chapati",
+        "Protein Shake + Banana",
+        "Beef/Fish + Sweet Potato",
+        "Daal + Roti + Ghee",
+        "High-Protein Salad + Nuts"
+    ],
+    "Maintain weight": [
+        "Balanced Indian Thali",
+        "Vegetable Upma",
+        "Egg Sandwich",
+        "Paneer Curry + Rice",
+        "Mixed Veg + Quinoa",
+        "Grilled Chicken + Salad",
+        "Moderate Carb Day"
+    ]
 }
 
-meal_plan = meal_plans.get(goal).get(body_type, meal_plans.get(goal).get("default"))
+meal_plan = meal_plans.get(goal, meal_plans["Maintain weight"])
 
-
-# Workout Plan Personalized
-workout_plans = {
-    "Lose weight": {
-        "Sedentary (little/no exercise)": ["Light Walking", "Yoga", "Cycling", "Walk", "Stretching", "Light Cardio", "Rest"],
-        "Moderately active (3-5 days/week)": ["HIIT", "Cardio", "Upper Body", "Core", "Lower Body", "Cycling", "Rest"]
-    },
-    "Gain muscle": {
-        "Sedentary (little/no exercise)": ["Full Body", "Rest", "Full Body", "Rest", "Upper Body", "Lower Body", "Rest"],
-        "Moderately active (3-5 days/week)": ["Push Day", "Pull Day", "Leg Day", "Rest", "Chest + Triceps", "Back + Biceps", "Abs"]
-    },
-    "Maintain weight": {
-        "default": ["Mixed Cardio", "Upper Body", "Yoga", "Lower Body", "Stretching", "Full Body", "Rest"]
-    }
-}
-
-workout_plan = workout_plans.get(goal).get(activity, workout_plans.get(goal).get("default"))
-
-
-# Display Meal Plan
-st.subheader("🍽 Your Personalized 7-Day Meal Plan")
+st.subheader("🍽 Personalized 7-Day Meal Plan")
 for i, meal in enumerate(meal_plan):
     st.write(f"Day {i+1}: {meal}")
 
-# Display Workout Plan
-st.subheader("🏋️‍♀️ Your Personalized 7-Day Workout Plan")
+
+# Personalized WORKOUT PLAN
+workout_plans = {
+    "Lose weight": {
+        "Sedentary (little/no exercise)": ["Light Walk", "Yoga", "Cycling", "Yoga", "Stretching", "Light Cardio", "Rest"],
+        "Lightly active (1-3 days/week)": ["Jogging", "Cycling", "Core Workout", "Yoga", "HIIT-Light", "Cardio Mix", "Rest"],
+        "Moderately active (3-5 days/week)": ["HIIT", "Cardio + Strength", "Upper Body", "Yoga", "Core + Cardio", "Cycling", "Rest"],
+        "Very active (6-7 days/week)": ["HIIT Intensive", "Running", "Strength Mix", "Core + Cardio", "Leg Day", "Swimming", "Rest"],
+        "Extra active (physical job / training)": ["Advanced HIIT", "Strength Circuit", "Endurance Run", "Plyometrics", "Core", "Active Recovery", "Rest"]
+    },
+    "Gain muscle": {
+        "Sedentary (little/no exercise)": ["Full Body", "Rest", "Full Body", "Rest", "Upper Body", "Lower Body", "Rest"],
+        "Lightly active (1-3 days/week)": ["Push", "Rest", "Pull", "Legs", "Rest", "Arms + Abs", "Rest"],
+        "Moderately active (3-5 days/week)": ["Push Day", "Pull Day", "Leg Day", "Rest", "Chest + Triceps", "Back + Biceps", "Abs"],
+        "Very active (6-7 days/week)": ["Chest", "Back", "Legs", "Shoulders", "Arms", "Core", "Active Rest"],
+        "Extra active (physical job / training)": ["Powerlifting", "Olympic Lifts", "Legs", "Push", "Pull", "Core", "Rest"]
+    },
+    "Maintain weight": {
+        "Sedentary (little/no exercise)": ["Light Cardio", "Stretching", "Yoga", "Walk", "Core", "Light Strength", "Rest"],
+        "Lightly active (1-3 days/week)": ["Cardio Mix", "Upper Body", "Core", "Yoga", "Lower Body", "Full Body", "Rest"],
+        "Moderately active (3-5 days/week)": ["Cardio + Strength", "Upper Body", "Yoga", "Lower Body", "Core + Strength", "Full Body", "Rest"],
+        "Very active (6-7 days/week)": ["Strength", "Cardio", "Yoga", "Leg Day", "Upper Body", "HIIT", "Rest"],
+        "Extra active (physical job / training)": ["Strength Intensive", "Endurance Cardio", "Core", "Mobility", "Leg Day", "Full Body", "Rest"]
+    }
+}
+
+workout_plan = workout_plans.get(goal, {}).get(activity)
+
+if workout_plan is None:
+    workout_plan = ["Mixed Activity", "Walk", "Yoga", "Strength", "Core", "Cardio", "Rest"]
+
+st.subheader("🏋️‍♀️ Personalized 7-Day Workout Plan")
 for i, workout in enumerate(workout_plan):
     st.write(f"Day {i+1}: {workout}")
 
 
-# Export Personalized CSV
-if st.button("Download Personalized Plan"):
+# Export CSV for download
+if st.button("Download Workout + Meal Plan"):
     df = pd.DataFrame({
         "Day": [f"Day {i+1}" for i in range(7)],
-        "Meal Plan": meal_plan,
-        "Workout Plan": workout_plan
+        "Meal": meal_plan,
+        "Workout": workout_plan
     })
-    st.download_button("Click to Download", df.to_csv(index=False), file_name=f"{name}_fitlife_plan.csv")
+    st.download_button("Click to Download", df.to_csv(index=False), file_name="fitlife_plan.csv")
 
-st.caption("AI-Based Personalized Fitness & Diet Planner")
+
+st.caption("This is a simple frontend demo. You can integrate AI features later.")
 st.write("Last updated:", datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC"))
